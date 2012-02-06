@@ -1,0 +1,1 @@
+Anonymous aims to be a nice photo gallery for web.
