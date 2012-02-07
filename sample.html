@@ -6,10 +6,13 @@
 <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" />
 <script type="text/javascript">
 	jQuery(function($) {
-		var $ps_container = $('#ps_container'), $ps_close = $('#ps_close'), $ps_overlay = $('#ps_overlay'), $loading = $('<div />',
+		var $ps_container = $('#ps_container'), $ps_close = $('#ps_close'), $ps_overlay = $('#ps_overlay');
+		var $loading = $('<div />',
 		{
 			className : 'loading'
-		}), data = [ "images/Bolivian_Altiplano_-_Lake.jpg", "images/delkoo-5J_uYXHIk1E-original.jpg", "images/delkoo-uZdQY6CyMyQ-original.jpg", "images/jakecooney-ytVOy8Ff_2g-original.jpg", "images/Mongolia_Landscape.jpg" ], items_count = data.length;
+		});
+		var data = [ "images/Bolivian_Altiplano_-_Lake.jpg", "images/delkoo-5J_uYXHIk1E-original.jpg", "images/delkoo-uZdQY6CyMyQ-original.jpg", "images/jakecooney-ytVOy8Ff_2g-original.jpg", "images/Mongolia_Landscape.jpg" ];
+		var items_count = data.length;
 		for ( var i = 0; i < items_count; ++i) {
 			var item_source = data[i];
 			var cnt = 0;
@@ -36,55 +39,93 @@
 			}).attr('src', item_source);
 		}
 
+		$(document).bind('keydown', 'left', function() {
+			previousPhoto();
+		});
+
+		$(document).bind('keydown', 'right', function() {
+			nextPhoto();
+		});
 		/**
 		 * navigate through the images: 
 		 * the last one (the visible one) becomes the first one.
 		 * we also rotate 0 degrees the new visible picture 
 		 */
-		function nextPhoto() {
-			var $current = $ps_container.find('img:last');
-			var r = Math.floor(Math.random() * 41) - 20;
+			function nextPhoto() {
+				var $current = $ps_container.find('img:last');
+				var r = Math.floor(Math.random() * 41) - 20;
 
-			var currentPositions =
-			{
-				marginLeft : $current.css('margin-left'),
-				marginTop : $current.css('margin-top')
-			}
-			var $new_current = $current.prev();
+				var currentPositions =
+				{
+					marginLeft : $current.css('margin-left'),
+					marginTop : $current.css('margin-top')
+				}
+				var $new_current = $current.prev();
 
-			$current.animate(
-			{
-				'marginLeft' : '250px',
-				'marginTop' : '-385px'
-			}, 250, function() {
-				$(this).insertBefore($ps_container.find('img:first')).css(
+				$current.animate(
 				{
-					'-moz-transform' : 'rotate(' + r + 'deg)',
-					'-webkit-transform' : 'rotate(' + r + 'deg)',
-					'transform' : 'rotate(' + r + 'deg)'
-				}).animate(
-				{
-					'marginLeft' : currentPositions.marginLeft,
-					'marginTop' : currentPositions.marginTop
+					'marginLeft' : '250px',
+					'marginTop' : '-385px'
 				}, 250, function() {
-					$new_current.css(
+					$(this).insertBefore($ps_container.find('img:first')).css(
+					{
+						'-moz-transform' : 'rotate(' + r + 'deg)',
+						'-webkit-transform' : 'rotate(' + r + 'deg)',
+						'transform' : 'rotate(' + r + 'deg)'
+					}).animate(
+					{
+						'marginLeft' : currentPositions.marginLeft,
+						'marginTop' : currentPositions.marginTop
+					}, 250, function() {
+						$new_current.css(
+						{
+							'-moz-transform' : 'rotate(0deg)',
+							'-webkit-transform' : 'rotate(0deg)',
+							'transform' : 'rotate(0deg)'
+						});
+					});
+				});
+			}
+			function previousPhoto() {
+				var $current = $ps_container.find('img:first');
+				var r = Math.floor(Math.random() * 41) - 20;
+
+				var currentPositions =
+				{
+					marginLeft : $current.css('margin-left'),
+					marginTop : $current.css('margin-top')
+				}
+				var $new_current = $ps_container.find('img:last');
+
+				$current.animate(
+				{
+					'marginLeft' : '250px',
+					'marginTop' : '-385px'
+				}, 250, function() {
+					$(this).insertAfter($ps_container.find('img:last')).css(
 					{
 						'-moz-transform' : 'rotate(0deg)',
 						'-webkit-transform' : 'rotate(0deg)',
 						'transform' : 'rotate(0deg)'
+					}).animate(
+					{
+						'marginLeft' : currentPositions.marginLeft,
+						'marginTop' : currentPositions.marginTop
+					}, 250, function() {
+						$new_current.css(
+						{
+							'-moz-transform' : 'rotate(' + r + 'deg)',
+							'-webkit-transform' : 'rotate(' + r + 'deg)',
+							'transform' : 'rotate(' + r + 'deg)'
+						});
 					});
 				});
-			});
-		}
-		$('document').bind('keydown', 'left', function() {
-			nextPhoto();
-		});
+			}
 	});
 </script>
 </head>
 <body>
 	<div id="ps_overlay" class="ps_overlay" style="display: none;"></div>
-	<a id="ps_close" class="ps_close" style="display: none;"></a>
 	<div id="ps_container" class="ps_container" style="display: none;">
 		<a id="ps_next_photo" class="ps_next_photo" style="display: none;"></a>
 	</div>
