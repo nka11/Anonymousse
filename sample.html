@@ -1,0 +1,92 @@
+<html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
+<script src="js/jquery.hotkeys.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/anonymousse.js"></script>
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" />
+<script type="text/javascript">
+	jQuery(function($) {
+		var $ps_container = $('#ps_container'), $ps_close = $('#ps_close'), $ps_overlay = $('#ps_overlay'), $loading = $('<div />',
+		{
+			className : 'loading'
+		}), data = [ "images/img1.jpg", "images/img2.jpg", "images/img3.jpg" ], items_count = data.length;
+		for ( var i = 0; i < items_count; ++i) {
+			var item_source = data[i];
+			var cnt = 0;
+			$('<img />').load(function() {
+				var $image = $(this);
+				++cnt;
+				resizeCenterImage($image);
+				$ps_container.append($image);
+				var r = Math.floor(Math.random() * 41) - 20;
+				if (cnt < items_count) {
+					$image.css(
+					{
+						'-moz-transform' : 'rotate(' + r + 'deg)',
+						'-webkit-transform' : 'rotate(' + r + 'deg)',
+						'transform' : 'rotate(' + r + 'deg)'
+					});
+				}
+				if (cnt == items_count) {
+					$loading.remove();
+					$ps_container.show();
+					$ps_close.show();
+					$ps_overlay.show();
+				}
+			}).attr('src', item_source);
+		}
+
+		/**
+		 * navigate through the images: 
+		 * the last one (the visible one) becomes the first one.
+		 * we also rotate 0 degrees the new visible picture 
+		 */
+		function nextPhoto() {
+			var $current = $ps_container.find('img:last');
+			var r = Math.floor(Math.random() * 41) - 20;
+
+			var currentPositions =
+			{
+				marginLeft : $current.css('margin-left'),
+				marginTop : $current.css('margin-top')
+			}
+			var $new_current = $current.prev();
+
+			$current.animate(
+			{
+				'marginLeft' : '250px',
+				'marginTop' : '-385px'
+			}, 250, function() {
+				$(this).insertBefore($ps_container.find('img:first')).css(
+				{
+					'-moz-transform' : 'rotate(' + r + 'deg)',
+					'-webkit-transform' : 'rotate(' + r + 'deg)',
+					'transform' : 'rotate(' + r + 'deg)'
+				}).animate(
+				{
+					'marginLeft' : currentPositions.marginLeft,
+					'marginTop' : currentPositions.marginTop
+				}, 250, function() {
+					$new_current.css(
+					{
+						'-moz-transform' : 'rotate(0deg)',
+						'-webkit-transform' : 'rotate(0deg)',
+						'transform' : 'rotate(0deg)'
+					});
+				});
+			});
+		}
+		$('document').bind('keydown', 'left', function() {
+			nextPhoto();
+		});
+	});
+</script>
+</head>
+<body>
+	<div id="ps_overlay" class="ps_overlay" style="display: none;"></div>
+	<a id="ps_close" class="ps_close" style="display: none;"></a>
+	<div id="ps_container" class="ps_container" style="display: none;">
+		<a id="ps_next_photo" class="ps_next_photo" style="display: none;"></a>
+	</div>
+</body>
+</html>
