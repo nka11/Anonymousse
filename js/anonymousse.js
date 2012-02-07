@@ -47,7 +47,7 @@
 			nextPhoto(stackContainer);
 		});
 		
-		$(document).bind('keydown', 'esc',function(){
+		$(document).bind('keydown', 'esc',function(e){
 			e.preventDefault();
 			stackContainer.hide();
 		});
