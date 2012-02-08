@@ -40,6 +40,8 @@
 			items_count = items.length,
 			stackContainer = this,
 			previousPhoto = function(stackContainer) {
+				if (stackContainer.controlTimer > 0) {return;}
+				stackContainer.controlTimer = 1;
 				var r = Math.floor(Math.random() * 41) - 20;
 				var current = stackContainer.find('img:first'), currentPositions =
 				{
@@ -67,10 +69,13 @@
 															'-webkit-transform' : 'rotate(' + r + 'deg)',
 															'transform' : 'rotate(' + r + 'deg)'
 														});
+												stackContainer.controlTimer = 0;
 											});
 						});
 			},
 			nextPhoto = function(stackContainer) {
+				if (stackContainer.controlTimer > 0) {return;}
+				stackContainer.controlTimer = 1;
 				var r = Math.floor(Math.random() * 41) - 20;
 				var current = stackContainer.find('img:last'), currentPositions =
 				{
@@ -98,8 +103,10 @@
 															'-webkit-transform' : 'rotate(0deg)',
 															'transform' : 'rotate(0deg)'
 														});
+												stackContainer.controlTimer = 0;
 											});
 						});
+				
 			}; // end of var declaration section
 		
 		options = $.extend({}, {
@@ -155,6 +162,16 @@
 			e.preventDefault();
 			stackContainer.hide();
 		});
+		if (options.mouseWheel) {
+			stackContainer.bind('mousewheel',this,function(event, delta) {					 
+					 if (delta < 0) {
+						 previousPhoto(stackContainer);
+					 } else {
+						 nextPhoto(stackContainer);
+					 }
+					 return false;
+				 });
+		}
 		return this;
 	};
 })(jQuery);
