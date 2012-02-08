@@ -35,7 +35,7 @@
 				});
 	};
 	
-	$.fn.photoStack = function(options) {
+	$.fn.mousse = function(options) {
 		var items = options.items,
 			items_count = items.length,
 			stackContainer = this,
